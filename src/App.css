@@ -1,10 +1,11 @@
-#root {
+ #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  align-items: center;
 }
-
+/*
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -39,4 +40,34 @@
 
 .read-the-docs {
   color: #888;
+} */
+
+
+.product-item {
+  border: 1px solid #ddd;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  }
+
+.btn-delete, .btn-edit {
+  color: white;
+  margin-left : 1rem;
+  padding: 0.5rem 1rem ;
+  border-radius: 4px;    /* Optional: makes them look like the image */
+  border: none;
+  cursor: pointer;
+}
+
+.btn-delete {background-color: red;}
+
+.btn-edit {background-color: rgba(37, 160, 12, 0.952);}
+
+.form-add-product {
+  display: flex;         /* Grid was used, but flex is easier for a single row */
+  flex-direction: column;
+  flex-wrap: wrap;       /* Allows inputs to drop to next line if screen is small */
+  max-width: 400px;
+  gap: 1rem;             /* Adds space between the inputs */
+  justify-content: center;
+  margin-bottom: 1.6rem;
 }

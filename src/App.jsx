@@ -1,6 +1,8 @@
 
+import { useState } from 'react';
 import './App.css'
-import ProductList from './components/ProductList'
+import ProductList from './components/ProductList';
+import { Button, FormAddProduct, FormEditProduct } from './components/ProductItem';
 
 
 const InitialProducts = [
@@ -35,12 +37,40 @@ const InitialProducts = [
       "image_url": "https://example.com/images/journal.jpg"
     }
 ]
-function App() {
-  const products = InitialProducts; 
 
-  return (<div className='main'>
-      <ProductList Products={products} />
-  </div>)
+function App() {
+  
+  const [products, setProducts] = useState(InitialProducts);
+  const[editingProduct, setEditingProduct] = useState(null);
+  const[showAddForm, setShowAddForm] = useState(false);
+
+  function addProduct(product){
+    setProducts((products)=>[...products, product])
+  }
+
+  function handleDeleteProduct(id){ 
+    setProducts(products.filter((product)=> product.id !== id))
+  }
+
+  function handleEditProduct(product){
+    setEditingProduct(product);
+  }
+
+  function handleUpdateProduct(e){
+     e.preventDefault();
+    setProducts((products)=> products.map(p => (p.id === editingProduct.id ? editingProduct : p)))
+
+    setEditingProduct(null);
+  }
+
+  return (
+    <div className='main'>
+      {showAddForm && <FormAddProduct onAddProduct={addProduct}/>}
+       <Button onClick={()=>setShowAddForm((show)=> !show)} label={showAddForm ? "Close" : "Add"}/>
+      <ProductList products={products} onDeleteProduct={handleDeleteProduct} onEditProduct={handleEditProduct}/>
+      {editingProduct && <FormEditProduct EditedProduct={editingProduct} onUpdateProduct={handleUpdateProduct} onEditedProduct={handleEditProduct} onCancelEdit={()=>setEditingProduct(null)}/>}
+
+    </div>)
 }
 
 export default App

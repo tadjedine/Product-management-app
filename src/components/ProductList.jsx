@@ -1,11 +1,10 @@
 import ProductItem from "./ProductItem";
 
-
-function ProductList ({Products}){
+function ProductList ({products, onDeleteProduct, onEditProduct}){
         
     return(
         <ul>
-            {Products.map((product)=> <ProductItem product={product} key={product.id}/>)}
+            {products.map((product)=> <ProductItem product={product} key={product.id} onDeleteProduct={onDeleteProduct} onEditProduct={onEditProduct}/>)}
         </ul>
     )
 }
