@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import './App.css'
 import ProductList from './components/ProductList';
-import { Button, FormAddProduct, FormEditProduct } from './components/ProductItem';
+import { Button, FormAddProduct, FormEditProduct, ProductForm } from './components/ProductItem';
 
 
 const InitialProducts = [
@@ -41,6 +41,7 @@ const InitialProducts = [
 function App() {
   
   const [products, setProducts] = useState(InitialProducts);
+  // a state to store the product being edited
   const[editingProduct, setEditingProduct] = useState(null);
   const[showAddForm, setShowAddForm] = useState(false);
 
@@ -56,17 +57,20 @@ function App() {
     setEditingProduct(product);
   }
 
-  function handleUpdateProduct(e){
-     e.preventDefault();
-    setProducts((products)=> products.map(p => (p.id === editingProduct.id ? editingProduct : p)))
+  // function responsible for updating a product, once edited, inside products array 
+  function handleUpdateProduct(){
 
+    setProducts((products)=> products.map(p => (p.id === editingProduct.id ? editingProduct : p)))
     setEditingProduct(null);
   }
 
   return (
     <div className='main'>
-      {showAddForm && <FormAddProduct onAddProduct={addProduct}/>}
-       <Button onClick={()=>setShowAddForm((show)=> !show)} label={showAddForm ? "Close" : "Add"}/>
+      {/* {showAddForm && <FormAddProduct onAddProduct={addProduct}/>} */}
+       {/* <Button onClick={()=>setShowAddForm((show)=> !show)} label={showAddForm ? "Close" : "Add"}/> */}
+       {/* {showAddForm && <ProductForm initialProduct={editingProduct} handleSubmit={editingProduct ? handleUpdateProduct}/>} */}
+      
+
       <ProductList products={products} onDeleteProduct={handleDeleteProduct} onEditProduct={handleEditProduct}/>
       {editingProduct && <FormEditProduct EditedProduct={editingProduct} onUpdateProduct={handleUpdateProduct} onEditedProduct={handleEditProduct} onCancelEdit={()=>setEditingProduct(null)}/>}
 

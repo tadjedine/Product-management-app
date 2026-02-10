@@ -1,4 +1,4 @@
-import React, { useState } from  'react'; 
+import React, { useEffect, useState } from  'react'; 
 
 function ProductItem ({product, onDeleteProduct, onEditProduct}){
         
@@ -56,20 +56,58 @@ export function FormAddProduct ({onAddProduct}){
     )
 }
 
-    export function FormEditProduct({EditedProduct, onUpdateProduct, onEditedProduct, onCancelEdit}){
+export function FormEditProduct({EditedProduct, onUpdateProduct, onEditedProduct, onCancelEdit}){
 
-        return(
-            <form onSubmit={onUpdateProduct}>
-            
-            <input value={EditedProduct.name} onChange={(e)=>onEditedProduct({...EditedProduct, name: (e.target.value)})}/>
-            <input  value={EditedProduct.category} onChange={(e)=>onEditedProduct({...EditedProduct, category: (e.target.value)})}/>
-            <input value={EditedProduct.price} onChange={(e)=>onEditedProduct({...EditedProduct, price: (e.target.value)})}/>
-            <input value={EditedProduct.image_url} onChange={(e)=>onEditedProduct({...EditedProduct, image_url: (e.target.value)})}/>
-                <button type='submit' className='btn-edit'>Edit product</button>
-                <button type='button'className='btn-delete' onClick={onCancelEdit} >Cancel</button>
-            </form>
-        )
+    return(
+        <form onSubmit={onUpdateProduct}>
+        
+        <input value={EditedProduct.name} onChange={(e)=>onEditedProduct({...EditedProduct, name: (e.target.value)})}/>
+        <input  value={EditedProduct.category} onChange={(e)=>onEditedProduct({...EditedProduct, category: (e.target.value)})}/>
+        <input value={EditedProduct.price} onChange={(e)=>onEditedProduct({...EditedProduct, price: (e.target.value)})}/>
+        <input value={EditedProduct.image_url} onChange={(e)=>onEditedProduct({...EditedProduct, image_url: (e.target.value)})}/>
+            <button type='submit' className='btn-edit'>Edit product</button>
+            <button type='button'className='btn-delete' onClick={onCancelEdit}>Cancel</button>
+        </form>
+    )
+}
+
+export function ProductForm({initialProduct, onSubmitProduct, onCancel}){
+
+    const emptyProduct = {id : crypto.randomUUID(), name : '', category : '', price:'', currency: "USD",
+                        stock_status: "in_stock", image:''}
+    const [draftProduct, setDraftProduct] = useState(initialProduct ?? emptyProduct);
+
+    const isEditMode = Boolean(initialProduct);
+
+    useEffect(()=>{
+        setDraftProduct(initialProduct ?? emptyProduct)
+    }, [initialProduct])
+
+    function handleSubmit(e){
+        e.preventDefault();
+        handleSubmit(draftProduct)
+        onSubmitProduct(draftProduct);
     }
+    return(
+        <form onSubmit={handleSubmit}>
+
+            <label>Product's name</label>
+            <input type='text' value={draftProduct.name} onChange={(e)=>setDraftProduct({...draftProduct, name: (e.target.value)})}/>
+
+            <label>Product's category</label>
+            <input type='text' value={draftProduct.category} onChange={(e)=>setDraftProduct({...draftProduct, category:(e.target.value)})}/>
+
+            <label>Product's price</label>
+            <input type='text' value={draftProduct.price} onChange={(e)=>setDraftProduct({...draftProduct, price: (e.target.value)})}/>
+
+            <label> Product's image URL</label>
+            <input type="text" value={draftProduct.image} onChange={(e)=>setDraftProduct({...draftProduct, image: (e.target.value)})}/>
+
+            <button type="submit">{isEditMode ? 'Save changes' :'Add product'  }</button>
+            <button type='button'className='btn-delete' onClick={onCancel}>Cancel</button>
+        </form>
+    )
+}
 
     export function Button({onClick, label, className}){
         return <button className= {className} onClick={onClick}>{label}</button>
