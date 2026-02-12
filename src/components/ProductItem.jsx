@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from  'react'; 
 
-function ProductItem ({product, onDeleteProduct, onEditProduct}){
+function ProductItem ({product, onDeleteProduct, onEditProduct, disableEdit}){
         
     return (
         <li className='product-item'>
@@ -10,7 +10,7 @@ function ProductItem ({product, onDeleteProduct, onEditProduct}){
             <p>- Category : {product.category}</p>
             <p>- Price : {product.price} {product.currency}</p>
 
-            <button className='btn-edit' onClick={()=>onEditProduct(product)}> Edit</button>
+            <button className='btn-edit' onClick={()=>onEditProduct(product)} disabled={disableEdit}> Edit</button>
             <button className='btn-delete' onClick={()=>onDeleteProduct(product.id)}> Delete </button>
         </li>)
 }
@@ -85,7 +85,6 @@ export function ProductForm({initialProduct, onSubmitProduct, onCancel}){
 
     function handleSubmit(e){
         e.preventDefault();
-        handleSubmit(draftProduct)
         onSubmitProduct(draftProduct);
     }
     return(
@@ -104,7 +103,7 @@ export function ProductForm({initialProduct, onSubmitProduct, onCancel}){
             <input type="text" value={draftProduct.image} onChange={(e)=>setDraftProduct({...draftProduct, image: (e.target.value)})}/>
 
             <button type="submit">{isEditMode ? 'Save changes' :'Add product'  }</button>
-            <button type='button'className='btn-delete' onClick={onCancel}>Cancel</button>
+           {isEditMode && <button type='button'className='btn-delete' onClick={onCancel}>Cancel</button>}
         </form>
     )
 }
