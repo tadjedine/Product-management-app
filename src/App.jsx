@@ -1,6 +1,8 @@
 
+import { useState } from 'react';
 import './App.css'
-import ProductList from './components/ProductList'
+import ProductList from './components/ProductList';
+import { Button, FormAddProduct, FormEditProduct, ProductForm } from './components/ProductItem';
 
 
 const InitialProducts = [
@@ -35,12 +37,48 @@ const InitialProducts = [
       "image_url": "https://example.com/images/journal.jpg"
     }
 ]
-function App() {
-  const products = InitialProducts; 
 
-  return (<div className='main'>
-      <ProductList Products={products} />
-  </div>)
+function App() {
+  
+  const [products, setProducts] = useState(InitialProducts);
+  // a state to store the product being edited
+  const[editingProduct, setEditingProduct] = useState(null);
+  const[showAddForm, setShowAddForm] = useState(false);
+
+  const  isAdding = showAddForm === true;
+
+  function handleAddProduct(product){
+    setProducts((products)=>[...products, product])
+  }
+
+  function handleDeleteProduct(id){ 
+    setProducts(products.filter((product)=> product.id !== id))
+  }
+
+  function handleEditProduct(product){
+    setEditingProduct(product);
+  }
+
+  // function responsible for updating a product, once edited, inside products array 
+  function handleUpdateProduct(updatedProduct){
+
+    setProducts((products)=> products.map(p => (p.id === updatedProduct.id ? updatedProduct : p)))
+    setEditingProduct(null);
+  }
+
+  return (
+    <div className='main'>
+      {/* {showAddForm && <FormAddProduct onAddProduct={handleAddProduct}/>} */}
+       {showAddForm && <ProductForm initialProduct={editingProduct} onSubmitProduct={editingProduct ? handleUpdateProduct : handleAddProduct}/>}
+       <Button onClick={()=>setShowAddForm((show)=> !show)} label={showAddForm ? "Close" : "Add"}/>
+      
+
+      <ProductList products={products} onDeleteProduct={handleDeleteProduct} onEditProduct={handleEditProduct} disableEdit={isAdding}/>
+      {/* {editingProduct && <FormEditProduct EditedProduct={editingProduct} onUpdateProduct={handleUpdateProduct} onEditedProduct={handleEditProduct} onCancelEdit={()=>setEditingProduct(null)} disable={isAdding}/>} */}
+      
+      {editingProduct && <ProductForm initialProduct={editingProduct} onSubmitProduct={handleUpdateProduct} onCancel={()=> setEditingProduct(null)}/>}
+
+    </div>)
 }
 
 export default App
