@@ -44,6 +44,7 @@ function App() {
   // a state to store the product being edited
   const[editingProduct, setEditingProduct] = useState(null);
   const[showAddForm, setShowAddForm] = useState(false);
+  const 
 
   const  isAdding = showAddForm === true;
 
