@@ -3,6 +3,7 @@ import { useState } from 'react';
 import './App.css'
 import ProductList from './components/ProductList';
 import { Button, FormAddProduct, FormEditProduct, ProductForm } from './components/ProductItem';
+import { Search } from './components/Navigation';
 
 
 const InitialProducts = [
@@ -41,12 +42,13 @@ const InitialProducts = [
 function App() {
   
   const [products, setProducts] = useState(InitialProducts);
-  // a state to store the product being edited
-  const[editingProduct, setEditingProduct] = useState(null);
+  const[editingProduct, setEditingProduct] = useState(null);   // a state to store the product being edited
   const[showAddForm, setShowAddForm] = useState(false);
-  const 
+  const [searchTerm, setsearchTerm] = useState("");
 
-  const  isAdding = showAddForm === true;
+  // Derived states
+  const  isAdding = (showAddForm === true);
+  const filteredProducts = products.filter((product) => product.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
   function handleAddProduct(product){
     setProducts((products)=>[...products, product])
@@ -67,15 +69,16 @@ function App() {
     setEditingProduct(null);
   }
 
+ 
+
   return (
     <div className='main'>
-      {/* {showAddForm && <FormAddProduct onAddProduct={handleAddProduct}/>} */}
-       {showAddForm && <ProductForm initialProduct={editingProduct} onSubmitProduct={editingProduct ? handleUpdateProduct : handleAddProduct}/>}
-       <Button onClick={()=>setShowAddForm((show)=> !show)} label={showAddForm ? "Close" : "Add"}/>
-      
+      <Search query={searchTerm} setQuery={setsearchTerm}/>
 
-      <ProductList products={products} onDeleteProduct={handleDeleteProduct} onEditProduct={handleEditProduct} disableEdit={isAdding}/>
-      {/* {editingProduct && <FormEditProduct EditedProduct={editingProduct} onUpdateProduct={handleUpdateProduct} onEditedProduct={handleEditProduct} onCancelEdit={()=>setEditingProduct(null)} disable={isAdding}/>} */}
+      {showAddForm && <ProductForm initialProduct={editingProduct} onSubmitProduct={editingProduct ? handleUpdateProduct : handleAddProduct}/>}
+      <Button onClick={()=>setShowAddForm((show)=> !show)} label={showAddForm ? "Close" : "Add"}/>
+    
+      <ProductList products={filteredProducts} onDeleteProduct={handleDeleteProduct} onEditProduct={handleEditProduct} disableEdit={isAdding}/>
       
       {editingProduct && <ProductForm initialProduct={editingProduct} onSubmitProduct={handleUpdateProduct} onCancel={()=> setEditingProduct(null)}/>}
 
