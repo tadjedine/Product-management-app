@@ -14,3 +14,26 @@ export function Search({query, setQuery}){
             ref={inputEl}
             />)
 }
+
+export function Loader (){
+  return <p className="loader">Loading....</p>
+}
+
+export function NavBar ({children}){  
+  return (
+      <nav className="nav-bar">
+        {children}
+      </nav>)
+}
+
+export function Main ({children}){
+  return(
+    <main className="main">
+      {children}
+    </main>
+  )
+ }
+
+export function ErrorMessage({message}){
+  return  <p className="error">{message}</p>
+}

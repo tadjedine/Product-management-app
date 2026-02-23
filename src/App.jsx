@@ -1,9 +1,9 @@
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css'
 import ProductList from './components/ProductList';
 import { Button, FormAddProduct, FormEditProduct, ProductForm } from './components/ProductItem';
-import { Search } from './components/Navigation';
+import { ErrorMessage, Loader, Main, NavBar, Search } from './components/Navigation';
 
 
 const InitialProducts = [
@@ -41,14 +41,17 @@ const InitialProducts = [
 
 function App() {
   
-  const [products, setProducts] = useState(InitialProducts);
+  const [products, setProducts] = useState([]);
   const[editingProduct, setEditingProduct] = useState(null);   // a state to store the product being edited
   const[showAddForm, setShowAddForm] = useState(false);
-  const [searchTerm, setsearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isLoading, setIsloading]= useState(false);
+  const [error, setError] = useState("");
+
 
   // Derived states
   const  isAdding = (showAddForm === true);
-  const filteredProducts = products.filter((product) => product.name.toLowerCase().includes(searchTerm.toLowerCase()));
+  const filteredProducts = products.filter((product) => product.title.toLowerCase().includes(searchTerm.toLowerCase()));
 
   function handleAddProduct(product){
     setProducts((products)=>[...products, product])
@@ -69,20 +72,54 @@ function App() {
     setEditingProduct(null);
   }
 
- 
+ useEffect(()=>{
+  const controller = new AbortController();
+
+  async function fetchingProduct() {
+    try {
+      setIsloading(true);
+
+      const res = await fetch("https://dummyjson.com/products", {signal: controller.signal})
+      if(!res.ok) throw new Error("Something went wrong with fetching products")
+      
+      const data = await res.json();
+      // if( data.Response === 'False') throw new Error("Product not found")
+
+      setProducts(data.products);
+      console.log(data.products)
+
+    } catch (error) {
+      if (error.name !== "AbortError")
+        setError(error.message);
+    } finally{ 
+        setIsloading(false)
+      }
+  }
+
+    fetchingProduct();
+    return ()=>{ controller.abort()}
+ }, [])
 
   return (
-    <div className='main'>
-      <Search query={searchTerm} setQuery={setsearchTerm}/>
+    <>
+      <NavBar>
+        <Search query={searchTerm} setQuery={setSearchTerm}/>
+      </NavBar>
 
-      {showAddForm && <ProductForm initialProduct={editingProduct} onSubmitProduct={editingProduct ? handleUpdateProduct : handleAddProduct}/>}
-      <Button onClick={()=>setShowAddForm((show)=> !show)} label={showAddForm ? "Close" : "Add"}/>
-    
-      <ProductList products={filteredProducts} onDeleteProduct={handleDeleteProduct} onEditProduct={handleEditProduct} disableEdit={isAdding}/>
+      <Main>
+        {showAddForm && <ProductForm initialProduct={editingProduct} onSubmitProduct={editingProduct ? handleUpdateProduct : handleAddProduct}/>}
+        <Button onClick={()=>setShowAddForm((show)=> !show)} label={showAddForm ? "Close" : "Add"}/>
       
-      {editingProduct && <ProductForm initialProduct={editingProduct} onSubmitProduct={handleUpdateProduct} onCancel={()=> setEditingProduct(null)}/>}
+       {!isLoading && !error && <ProductList products={filteredProducts} onDeleteProduct={handleDeleteProduct} onEditProduct=             {handleEditProduct} disableEdit={isAdding}/>}
 
-    </div>)
+       {isLoading && <Loader/>}
+       {error && <ErrorMessage message={error}/>}
+
+        
+        {editingProduct && <ProductForm initialProduct={editingProduct} onSubmitProduct={handleUpdateProduct} onCancel={()=> setEditingProduct(null)}/>}
+      </Main>
+
+    </>)
 }
 
 export default App

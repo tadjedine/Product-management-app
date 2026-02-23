@@ -6,9 +6,9 @@ function ProductItem ({product, onDeleteProduct, onEditProduct, disableEdit}){
         <li className='product-item'>
             <img src={product.image_url} alt="Product's image"/>
             <p> Product's infos : </p>
-            <p>- Name : {product.name}</p>
+            <p>- title : {product.title}</p>
             <p>- Category : {product.category}</p>
-            <p>- Price : {product.price} {product.currency}</p>
+            <p>- Price : {product.price} $</p>
 
             <button className='btn-edit' onClick={()=>onEditProduct(product)} disabled={disableEdit}> Edit</button>
             <button className='btn-delete' onClick={()=>onDeleteProduct(product.id)}> Delete </button>
