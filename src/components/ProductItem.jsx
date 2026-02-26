@@ -29,6 +29,8 @@ export function ProductForm({ initialProduct, onSubmitProduct, onCancel }) {
     };
 
     const [draftProduct, setDraftProduct] = useState(initialProduct ?? emptyProduct);
+    
+
     const isEditMode = Boolean(initialProduct);
 
     // Sync state if the initialProduct prop changes
@@ -38,8 +40,16 @@ export function ProductForm({ initialProduct, onSubmitProduct, onCancel }) {
 
     function handleSubmit(e) {
         e.preventDefault();
-        // Convert price to number before sending to Parent state
-        onSubmitProduct({ ...draftProduct, price: Number(draftProduct.price) });
+        //  if(!draftProduct.title || !draftProduct.category || !draftProduct.price || !draftProduct.image) return;
+        const newErrors = {};
+        
+        if (!draftProduct.title.trim()) newErrors.title = "Title required"
+        if(!draftProduct.price || draftProduct.price <= 0) newErrors.price = "Invalid price"
+
+        setErrors(newErrors);
+        if((Object.keys(newErrors)).length > 0 ) return;
+
+        onSubmitProduct(draftProduct);
     }
 
     return (
@@ -69,7 +79,7 @@ export function ProductForm({ initialProduct, onSubmitProduct, onCancel }) {
             <input 
                 type='number' 
                 value={draftProduct.price} 
-                onChange={(e) => setDraftProduct({ ...draftProduct, price: e.target.value })} 
+                onChange={(e) => setDraftProduct({ ...draftProduct, price: Number(e.target.value) })} 
             />
 
             <label>Thumbnail URL</label>

@@ -4,12 +4,13 @@ import './App.css'
 import ProductList from './components/ProductList';
 import { Button, ProductForm } from './components/ProductItem';
 import { ErrorMessage, Loader, Main, NavBar, Search } from './components/Navigation';
+import usePersistedState from '../utils/hooks/usePersistedState';
 
 
 
 function App() {
   
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = usePersistedState("products", [])
   const[editingProduct, setEditingProduct] = useState(null);   // a state to store the product being edited
   const[showAddForm, setShowAddForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -55,7 +56,7 @@ function App() {
       const data = await res.json();
       // if( data.Response === 'False') throw new Error("Product not found")
       setProducts(data.products);
-      
+
     } catch (error) {
       if (error.name !== "AbortError")
         setError(error.message);
