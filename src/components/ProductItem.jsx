@@ -12,13 +12,13 @@ function ProductItem({ product, onDeleteProduct, onEditProduct, disableEdit }) {
             <p>- Price: {product.price} $</p>
 
             <button className='btn-edit' onClick={() => onEditProduct(product)} disabled={disableEdit}> Edit</button>
-            <button className='btn-delete' onClick={() => onDeleteProduct(product.id)}> Delete </button>
+            <button className='btn-delete' onClick={() => onDeleteProduct(product)}> Delete </button>
         </li>
     );
 }
 
 export function ProductForm({ initialProduct, onSubmitProduct, onCancel }) {
-    // 2. Updated initial state keys to match API (title, brand, thumbnail)
+    
     const emptyProduct = {
         id: crypto.randomUUID(),
         title: '',
@@ -29,7 +29,7 @@ export function ProductForm({ initialProduct, onSubmitProduct, onCancel }) {
     };
 
     const [draftProduct, setDraftProduct] = useState(initialProduct ?? emptyProduct);
-    
+    const [errors, setErrors] = useState({});
 
     const isEditMode = Boolean(initialProduct);
 
@@ -57,13 +57,15 @@ export function ProductForm({ initialProduct, onSubmitProduct, onCancel }) {
             <label>Product's Title</label>
             <input 
                 type='text' 
+                required
                 value={draftProduct.title} 
                 onChange={(e) => setDraftProduct({ ...draftProduct, title: e.target.value })} 
             />
-
+              {errors.title && <p className="error">{errors.title}</p>}
             <label>Brand</label>
             <input 
                 type='text' 
+                required
                 value={draftProduct.brand} 
                 onChange={(e) => setDraftProduct({ ...draftProduct, brand: e.target.value })} 
             />
@@ -71,6 +73,7 @@ export function ProductForm({ initialProduct, onSubmitProduct, onCancel }) {
             <label>Category</label>
             <input 
                 type='text' 
+                required
                 value={draftProduct.category} 
                 onChange={(e) => setDraftProduct({ ...draftProduct, category: e.target.value })} 
             />
@@ -78,10 +81,11 @@ export function ProductForm({ initialProduct, onSubmitProduct, onCancel }) {
             <label>Price</label>
             <input 
                 type='number' 
+                required
                 value={draftProduct.price} 
                 onChange={(e) => setDraftProduct({ ...draftProduct, price: Number(e.target.value) })} 
             />
-
+              {errors.title && <p className="error">{errors.title}</p>}
             <label>Thumbnail URL</label>
             <input 
                 type="text" 
