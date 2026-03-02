@@ -15,7 +15,8 @@ function App() {
   const[showAddForm, setShowAddForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsloading]= useState(false);
-  const [error, setError] = useState("");
+  const [fetchError, setFetchError] = useState("");
+  const [productToDelete, setProductToDelete] = useState(null);
 
 
   // Derived states
@@ -28,8 +29,15 @@ function App() {
     setShowAddForm(false)
   }
 
-  function handleDeleteProduct(id){ 
-    setProducts(products.filter((product)=> product.id !== id))
+  function handleDeleteClick(product){
+    setProductToDelete(product)
+  }
+  function confirmDeleteProduct(){ 
+    setProducts(products.filter((product)=> product.id !== productToDelete.id))
+    setProductToDelete(null)
+  }
+  function cancelDeleteProduct(){
+    setProductToDelete(null)
   }
 
   function handleEditProduct(product){
@@ -59,7 +67,7 @@ function App() {
 
     } catch (error) {
       if (error.name !== "AbortError")
-        setError(error.message);
+        setFetchError(fetchError.message);
     } finally{ 
         setIsloading(false)
       }
@@ -70,17 +78,23 @@ function App() {
   }, [])
 
   return (
-    <>
+    <div className="min-h-screen bg-gray-900 text-gray-100">
       <NavBar>
         <Search query={searchTerm} setQuery={setSearchTerm}/>
       </NavBar>
 
       <Main>
-      
-       {!isLoading && !error && <ProductList products={filteredProducts} onDeleteProduct={handleDeleteProduct} onEditProduct=             {handleEditProduct} disableEdit={isAdding}/>}
+       {productToDelete && (
+          <div className="modal">
+            <p>Delete "{productToDelete.title}" ?</p>
+            <button onClick={confirmDeleteProduct}>Yes</button>
+            <button onClick={cancelDeleteProduct}>No</button>
+          </div>)
+        }
+       {!isLoading && !fetchError && <ProductList products={filteredProducts} onDeleteProduct={handleDeleteClick} onEditProduct= {handleEditProduct} disableEdit={isAdding}/>}
 
        {isLoading && <Loader/>}
-       {error && <ErrorMessage message={error}/>}
+       {fetchError && <ErrorMessage message={fetchError}/>}
 
         {showAddForm && <ProductForm initialProduct={editingProduct} onSubmitProduct={editingProduct ? handleUpdateProduct : handleAddProduct}/>}
         {!showAddForm &&<Button onClick={()=>setShowAddForm((show)=> !show)} label={"Add a product"}/>}
@@ -88,7 +102,7 @@ function App() {
         {editingProduct && <ProductForm initialProduct={editingProduct} onSubmitProduct={handleUpdateProduct} onCancel={()=> setEditingProduct(null)}/>}
       </Main>
 
-    </>)
+    </div>)
 }
 
 export default App
