@@ -78,7 +78,7 @@ function App() {
   }, [])
 
   return (
-    <>
+    <div className="min-h-screen bg-gray-900 text-gray-100">
       <NavBar>
         <Search query={searchTerm} setQuery={setSearchTerm}/>
       </NavBar>
@@ -102,7 +102,7 @@ function App() {
         {editingProduct && <ProductForm initialProduct={editingProduct} onSubmitProduct={handleUpdateProduct} onCancel={()=> setEditingProduct(null)}/>}
       </Main>
 
-    </>)
+    </div>)
 }
 
 export default App
