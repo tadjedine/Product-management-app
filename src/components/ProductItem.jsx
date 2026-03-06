@@ -2,17 +2,18 @@ import React, { useEffect, useState } from 'react';
 
 function ProductItem({ product, onDeleteProduct, onEditProduct, disableEdit }) {
     return (
-        <li className='product-item'>
+        <li className= "bg-gray-800 border border-gray-700 p-6 rounded-2xl shadow-lg flexflex-col items-center text-center ">
             {/* The API uses 'thumbnail' or 'images' array */}
-            <img src={product.thumbnail} alt={product.title} />
-            <p> Product's infos : </p>
-            <p>- Title: {product.title}</p>
-            <p>- Brand: {product.brand}</p>
-            <p>- Category: {product.category}</p>
-            <p>- Price: {product.price} $</p>
+            <img src={product.thumbnail} alt={product.title} className='w-full h-60 object-cover rounded-xl mb-4' />
+            <p className='font-bold text-lg mb-1'> Product's infos : </p>
+            <p className='text-gray-400 text-xl mb-4 italic'> {product.title}</p>
+            <p className='text-gray-400 text-sm mb-4 italic'> {product.brand} - {product.category} </p>
+            <p className='text-xl font-semibold mb-6 text-green-400'> Price: {product.price} $</p>
 
-            <button className='btn-edit' onClick={() => onEditProduct(product)} disabled={disableEdit}> Edit</button>
-            <button className='btn-delete' onClick={() => onDeleteProduct(product)}> Delete </button>
+            <div className='flex gap-3 w-full justify-center'>
+                <button className=" bg-green-700 hover:bg-green-600  px-2 py-1 rounded-md flex-1 transition delay-150 " onClick={() => onEditProduct(product)} disabled={disableEdit}> Edit</button>
+                <button className="bg-[#790b0b] hover:bg-[#db1a17] px-2 py-1 rounded-md flex-1 transition delay-150  " onClick={() => onDeleteProduct(product)}> Delete </button>
+            </div>
         </li>
     );
 }

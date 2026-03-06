@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from 'react';
-import './App.css'
+// import './App.css'
 import ProductList from './components/ProductList';
 import { Button, ProductForm } from './components/ProductItem';
 import { ErrorMessage, Loader, Main, NavBar, Search } from './components/Navigation';
@@ -44,7 +44,7 @@ function App() {
     setEditingProduct(product);
   }
 
-  // function responsible for updating a product, once edited, inside products array 
+  // function responsible for updating a product --once edited-- inside products array 
   function handleUpdateProduct(updatedProduct){
 
     setProducts((products)=> products.map(p => (p.id === updatedProduct.id ? updatedProduct : p)))
@@ -85,24 +85,24 @@ function App() {
 
       <Main>
         
-          
             {productToDelete && (
               <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-                <div className="bg-gray-800 p-6 rounded-xl shadow-xl w-80 text-center">
+                <div className="bg-gray-800 p-6  rounded-xl shadow-xl w-80 text-center">
 
                   <p className='mb-6'>
                       Delete "{productToDelete.title}" ?
                   </p>
                   <div className="flex justify-center gap-4">
-                    <button 
-                      onClick={confirmDeleteProduct} 
-                      className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition"> Yes
-                    </button>
 
                     <button 
                       onClick={cancelDeleteProduct}
-                      className="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded-lg transition"> No
+                      className="bg-gray-600 hover:bg-gray-500 px-4 py-2 rounded-lg transition delay-150 duration-300 hover:-translate-y-1 hover:scale-110 " > Cancel
                     </button>
+                    <button 
+                      onClick={confirmDeleteProduct} 
+                      className="bg-amber-600 hover:bg-amber-500 px-4 py-2 rounded-lg transition delay-150 duration-300 hover:-translate-y-1 hover:scale-110"> Confirm
+                    </button>
+
                   </div>
 
                 </div>
